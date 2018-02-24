@@ -13,8 +13,18 @@ public class MessageTest {
 
     @Test
     public void rawFromMessageWithPrefix() {
-        Message message = new Message("baileyn!username@hostname", "PRIVMSG", "#hello", "how are you today?");
+        Message message = new Message(":baileyn!username@hostname", "PRIVMSG", "#hello", "how are you today?");
 
         Assert.assertEquals(":baileyn!username@hostname PRIVMSG #hello :how are you today?", message.toRaw());
+    }
+
+    @Test
+    public void parseMessageFromValidRaw() {
+        Message message = Message.fromRaw(":baileyn!username@hostname PRIVMSG #hello :how are you today?");
+
+        Assert.assertTrue(message.hasPrefix());
+        Assert.assertEquals(":baileyn!username@hostname", message.getPrefix());
+        Assert.assertEquals("PRIVMSG", message.getCommand());
+        Assert.assertArrayEquals(new String[] {"#hello", "how are you today?"}, message.getArguments().toArray(new String[0]));
     }
 }
