@@ -28,22 +28,21 @@ public class NetworkHandler {
      * A list of currently connected networks.
      */
     private List<Network> networkList = new ArrayList<>();
-    
+
     public ChannelFuture addNetwork(String networkHost, int port) {
         Bootstrap bootstrap = new Bootstrap();
         Network network = new Network(networkHost, port);
 
-        bootstrap.group(eventLoopGroup)
-            .channel(NioSocketChannel.class)
-            .option(ChannelOption.SO_KEEPALIVE, true)
-            .handler(new ChannelInitializer<SocketChannel>() {
-				@Override
-				protected void initChannel(SocketChannel ch) throws Exception {
-                    ch.pipeline().addLast(new DelimiterBasedFrameDecoder(MAX_MESSAGE_LENGTH, Delimiters.lineDelimiter()));
-                    ch.pipeline().addLast(new StringDecoder());
-                    ch.pipeline().addLast(new IrcClientHandler(network));	
-				}
-            });
+        bootstrap.group(eventLoopGroup).channel(NioSocketChannel.class).option(ChannelOption.SO_KEEPALIVE, true)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    protected void initChannel(SocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(
+                                new DelimiterBasedFrameDecoder(MAX_MESSAGE_LENGTH, Delimiters.lineDelimiter()));
+                        ch.pipeline().addLast(new StringDecoder());
+                        ch.pipeline().addLast(new IrcClientHandler(network));
+                    }
+                });
         networkList.add(network);
         return network.connect(bootstrap);
     }
