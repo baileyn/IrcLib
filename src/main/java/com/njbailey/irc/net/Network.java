@@ -14,8 +14,4 @@ public class Network {
         this.host = host;
         this.port = port;
     }
-
-    public ChannelFuture connect(Bootstrap bootstrap) {
-        return bootstrap.connect(host, port);
-    }
 }
