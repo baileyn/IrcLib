@@ -1,5 +1,6 @@
 package com.njbailey.irc.core;
 
+import com.njbailey.irc.core.messages.NumericMessage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -69,14 +70,14 @@ public class Message {
             messageBuilder.append(prefix).append(" ");
         }
 
-        messageBuilder.append(command).append(" ");
+        messageBuilder.append(command);
 
         for(String argument : arguments) {
             if(argument.chars().anyMatch(Character::isWhitespace)) {
                 messageBuilder.append(":").append(argument);
                 break;
             } else {
-                messageBuilder.append(argument).append(" ");
+                messageBuilder.append(" ").append(argument);
             }
         }
 
@@ -125,8 +126,16 @@ public class Message {
             arguments.add(argument);
         }
 
+        String[] args = arguments.toArray(new String[0]);
+
         // Construct the Message we have read.
-        return new Message(prefix, command, arguments.toArray(new String[0]));
+        if(command.chars().allMatch(Character::isDigit)) {
+            // The command is a sequence of numbers, return a NumericMessage.
+            return new NumericMessage(prefix, Integer.parseInt(command), args);
+        } else {
+            // Unspecialized message.
+            return new Message(prefix, command, arguments.toArray(new String[0]));
+        }
     }
 
     /**

@@ -27,4 +27,11 @@ public class MessageTest {
         Assert.assertEquals("PRIVMSG", message.getCommand());
         Assert.assertArrayEquals(new String[] {"#hello", "how are you today?"}, message.getArguments().toArray(new String[0]));
     }
+
+    @Test
+    public void messageToRawWithSingleArgument() {
+        Message message = new Message(null, "JOIN", "#ircbots");
+
+        Assert.assertEquals("JOIN #ircbots", message.toRaw());
+    }
 }
