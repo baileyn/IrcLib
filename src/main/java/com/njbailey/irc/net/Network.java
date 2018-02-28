@@ -2,7 +2,9 @@ package com.njbailey.irc.net;
 
 import com.njbailey.irc.core.Channel;
 import com.njbailey.irc.core.Message;
+import com.njbailey.irc.core.User;
 import com.njbailey.irc.core.messages.NumericMessage;
+import com.njbailey.irc.impl.DefaultNumericHandler;
 import com.njbailey.irc.net.event.ConnectionListener;
 import com.njbailey.irc.net.event.NumericMessageListener;
 
@@ -20,6 +22,7 @@ public class Network {
     private final int port;
 
     private List<Channel> channels = new ArrayList<Channel>();
+    private List<User> users = new ArrayList<User>();
 
     private List<ConnectionListener> connectionListeners = new ArrayList<>();
     private List<NumericMessageListener> numericMessageListeners = new ArrayList<>();
@@ -27,6 +30,8 @@ public class Network {
     public Network(final String host, final int port) {
         this.host = host;
         this.port = port;
+
+        addNumericMessageListener(new DefaultNumericHandler(this));
     }
 
     public void setChannel(final SocketChannel channel) {
@@ -91,6 +96,27 @@ public class Network {
         if(channel != null) {
             channel.writeAndFlush(message);
         }
+    }
+
+    /**
+     * Try to find a user with the specified name, and if they
+     * don't exist, create them and add them to the list.
+     */
+    public User addOrGetUser(final String nickname) {
+        User user = null;
+
+        for(User u : users) {
+            if(u.getNickname().equalsIgnoreCase(nickname)) {
+                user = u;
+                break;
+            }
+        }
+
+        if(user == null) {
+            user = new User(nickname);
+        }
+
+        return user;
     }
 
     /**

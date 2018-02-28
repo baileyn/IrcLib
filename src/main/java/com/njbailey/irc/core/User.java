@@ -3,7 +3,7 @@ package com.njbailey.irc.core;
 /**
  * Represents a User connected to an IRC server.
  */
-public class User {
+public class User implements MessageTarget {
     private String nickname;
     private String username;
     private String hostname;
@@ -45,6 +45,11 @@ public class User {
         }
 
         return new User(components[0], components[1], components[2]);
+    }
+
+    @Override
+    public String getName() {
+        return getNickname();
     }
 
     /**

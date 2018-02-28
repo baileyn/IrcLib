@@ -27,7 +27,7 @@ public class Main {
             @Override
             public void onNumericMessage(NumericMessage message) {
                 if(message.getNumeric() == 5) {
-                    network.send(new Message(null, "JOIN", "#ircbots"));
+                    network.send(new Message(null, "JOIN", "#rust-beginners"));
                 }
             }
         });
