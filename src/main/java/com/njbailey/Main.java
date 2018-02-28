@@ -14,7 +14,7 @@ public class Main {
         network.addConnectionListener(new ConnectionListener(){
             @Override
             public void connectionLost(Network network) {
-                // Do nothing.
+                // Do nothing.c
             }
         
             @Override
