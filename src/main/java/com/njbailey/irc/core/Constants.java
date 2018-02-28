@@ -77,12 +77,18 @@ public class Constants {
     public static final int ERR_NOADMININFO = 423;
     /**
      * Generic error message used to report a failed file
-     *operation during the processing of a message.
+     * operation during the processing of a message.
      */
-    public static int ERR_FILEERROR = 424;
+    public static final int ERR_FILEERROR = 424;
     /**
-     * Returned by the server whenever a client tries to
-     * perform a channel effecting command for which the
-     * client isn't a member.
+     * Returned when a nickname parameter expected for a
+     * command and isn't found.
      */
+    public static final int ERR_NONICKNAMEGIVEN = 431;
+    /**
+     * Returned after receiving a NICK message which contains
+     *characters which do not fall in the defined set.  See
+     *section x.x.x for details on valid nicknames.
+     */
+    public static final int ERR_ERRONEUSNICKNAME = 432;
 }
