@@ -92,4 +92,29 @@ public class Network {
             channel.writeAndFlush(message);
         }
     }
+
+    /**
+     * Try to find a channel with the specified name, and if it doesn't 
+     * exist create it and add it to the list.
+     * 
+     * @param name the name of the channel
+     * 
+     * @return the channel that was in the list
+     */
+    public Channel addOrGetChannel(final String name) {
+        Channel channel = null;
+
+        for(Channel c : channels) {
+            if(c.getName().equalsIgnoreCase(name)) {
+                channel = c;
+                break;
+            }
+        }
+
+        if(channel == null) {
+            channel = new Channel(name);
+        }
+
+        return channel;
+    }
 }
