@@ -1,5 +1,6 @@
 package com.njbailey.irc.net;
 
+import com.njbailey.irc.core.Channel;
 import com.njbailey.irc.core.Message;
 import com.njbailey.irc.core.messages.NumericMessage;
 import com.njbailey.irc.net.event.ConnectionListener;
@@ -17,6 +18,8 @@ public class Network {
     private SocketChannel channel;
     private final String host;
     private final int port;
+
+    private List<Channel> channels = new ArrayList<Channel>();
 
     private List<ConnectionListener> connectionListeners = new ArrayList<>();
     private List<NumericMessageListener> numericMessageListeners = new ArrayList<>();
