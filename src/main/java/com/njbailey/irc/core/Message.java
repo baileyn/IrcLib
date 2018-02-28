@@ -73,11 +73,12 @@ public class Message {
         messageBuilder.append(command);
 
         for(String argument : arguments) {
+            messageBuilder.append(" ");
             if(argument.chars().anyMatch(Character::isWhitespace)) {
                 messageBuilder.append(":").append(argument);
                 break;
             } else {
-                messageBuilder.append(" ").append(argument);
+                messageBuilder.append(argument);
             }
         }
 
