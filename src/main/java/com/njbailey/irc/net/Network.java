@@ -89,6 +89,14 @@ public class Network {
     }
 
     /**
+     * Create the client user with the specified nickname.
+     * @param nickname the nickname for the client
+     */
+    public void createClient(final String nickname) {
+        this.client = new User(nickname);
+    }
+
+    /**
      * Called when a {@code Message} is received from the server.
      */
     public void messageReceived(Message message) {
