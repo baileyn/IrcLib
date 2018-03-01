@@ -4,10 +4,11 @@ import com.njbailey.irc.core.Channel;
 import com.njbailey.irc.core.Message;
 import com.njbailey.irc.core.User;
 import com.njbailey.irc.core.messages.NumericMessage;
+import com.njbailey.irc.core.messages.PrivateMessage;
 import com.njbailey.irc.impl.DefaultNumericHandler;
 import com.njbailey.irc.net.event.ConnectionListener;
 import com.njbailey.irc.net.event.NumericMessageListener;
-
+import com.njbailey.irc.net.event.PrivateMessageListener;
 import io.netty.channel.socket.SocketChannel;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,12 +21,14 @@ public class Network {
     private SocketChannel channel;
     private final String host;
     private final int port;
+    private User client;
 
     private List<Channel> channels = new ArrayList<Channel>();
     private List<User> users = new ArrayList<User>();
 
     private List<ConnectionListener> connectionListeners = new ArrayList<>();
     private List<NumericMessageListener> numericMessageListeners = new ArrayList<>();
+    private List<PrivateMessageListener> privateMessageListeners = new ArrayList<>();
 
     public Network(final String host, final int port) {
         this.host = host;
@@ -57,6 +60,13 @@ public class Network {
     }
 
     /**
+     * Adds a {@code PrivateMessageListener} for this {@code Network}.
+     */
+    public void addPrivateMessageListener(PrivateMessageListener messageListener) {
+        this.privateMessageListeners.add(messageListener);
+    }
+
+    /**
      * This function is called whenever the client has successfully connected to the network.
      */
     public void connected() {
@@ -71,11 +81,21 @@ public class Network {
     }
 
     /**
+     * Return the client user.
+     * @return the client user
+     */
+    public User getClient() {
+        return client;
+    }
+
+    /**
      * Called when a {@code Message} is received from the server.
      */
     public void messageReceived(Message message) {
         if(message instanceof NumericMessage) {
             numericMessageListeners.forEach(listener -> listener.onNumericMessage((NumericMessage) message));
+        } else if (message instanceof PrivateMessage) {
+            privateMessageListeners.forEach(listener -> listener.onPrivateMessage((PrivateMessage) message));
         } else {
             System.out.println("Message {");
             System.out.println("\tPrefix: " + message.getPrefix());

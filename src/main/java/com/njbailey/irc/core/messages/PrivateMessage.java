@@ -5,15 +5,21 @@ import com.njbailey.irc.core.MessageTarget;
 
 public class PrivateMessage extends Message {
     /**
-     * Createa a new PrivateMessage to send the specified message to the specified target.
+     * Create a new PrivateMessage to send the specified message to the specified target.
      * 
      * @param target the target to send the message to
-     * @param message the message to send
+     * @param message the message to send.
      */
     public PrivateMessage(MessageTarget target, String message) {
         this(target.getName(), message);
     }
 
+    /**
+     * Create a new PrivateMessage to send the specified message to the specified target.
+     * 
+     * @param target the target to send the message to
+     * @param message the message to send
+     */
     public PrivateMessage(String target, String message) {
         super(null, "PRIVMSG", target, message);
     }
