@@ -103,7 +103,16 @@ public class Network {
         if(message instanceof NumericMessage) {
             numericMessageListeners.forEach(listener -> listener.onNumericMessage((NumericMessage) message));
         } else if (message instanceof PrivateMessage) {
-            privateMessageListeners.forEach(listener -> listener.onPrivateMessage((PrivateMessage) message));
+            PrivateMessage msg = (PrivateMessage) message;
+            final PrivateMessage privateMessage;
+
+            if(msg.getTarget().equalsIgnoreCase(client.getNickname())) {
+                privateMessage = new PrivateMessage(msg.getPrefix(), msg.getSender(), msg.getMessage());
+            } else {
+                privateMessage = msg;
+            }
+
+            privateMessageListeners.forEach(listener -> listener.onPrivateMessage(privateMessage));
         } else {
             System.out.println("Message {");
             System.out.println("\tPrefix: " + message.getPrefix());
