@@ -75,4 +75,9 @@ public class User implements MessageTarget {
     public String getHostname() {
         return hostname;
     }
+
+    @Override
+    public String toString() {
+        return nickname;
+    }
 }

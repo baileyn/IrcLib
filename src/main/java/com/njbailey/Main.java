@@ -1,5 +1,8 @@
 package com.njbailey;
 
+import java.util.Arrays;
+
+import com.njbailey.irc.core.Channel;
 import com.njbailey.irc.core.Message;
 import com.njbailey.irc.core.messages.NumericMessage;
 import com.njbailey.irc.core.messages.PrivateMessage;
@@ -29,7 +32,7 @@ public class Main {
             @Override
             public void onNumericMessage(NumericMessage message) {
                 if(message.getNumeric() == 5) {
-                    network.send(new Message(null, "JOIN", "#rust-beginners"));
+                    network.send(new Message(null, "JOIN", "#ircbots"));
                 }
             }
         });
@@ -37,6 +40,31 @@ public class Main {
             @Override
             public void onPrivateMessage(PrivateMessage message) {
                 String sender = message.getSender();
+                String target = message.getTarget();
+                String msg = message.getMessage();
+
+                Channel channel = network.getChannel(target);
+                System.out.println("[" + target + "][" + sender + "]: " + msg);
+
+                if(msg.equals("!quit")) {
+                    System.exit(0); // TODO: Exit gracefully.
+                } else if(msg.equals("!talk")) {
+                    network.send(new PrivateMessage(target, "Hello, there."));
+                } else if(msg.equals("!users")) {
+                    if(channel != null) {
+                        network.send(new PrivateMessage(target, Arrays.toString(channel.getUsers().toArray())));
+                    } else {
+                        network.send(new PrivateMessage(target, "Say this in a channel."));
+                    }
+                } else if(msg.equals("!topic")) {
+                    if(channel != null) {
+                        network.send(new PrivateMessage(target, channel.getTopic()));
+                    } else {
+                        network.send(new PrivateMessage(target, "We're not in a channel with a topic."));
+                    }
+                } else {
+                    System.out.println("MESSAGE: \"" + msg + "\"");
+                }
             }
         });
     }
