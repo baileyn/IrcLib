@@ -2,11 +2,14 @@ package com.njbailey.irc.net;
 
 import com.njbailey.irc.core.Channel;
 import com.njbailey.irc.core.Message;
+import com.njbailey.irc.core.MessageTarget;
 import com.njbailey.irc.core.User;
 import com.njbailey.irc.core.messages.NumericMessage;
 import com.njbailey.irc.core.messages.PrivateMessage;
+import com.njbailey.irc.event.ChannelConnectionListener;
 import com.njbailey.irc.impl.DefaultNumericHandler;
 import com.njbailey.irc.net.event.ConnectionListener;
+import com.njbailey.irc.net.event.MessageListener;
 import com.njbailey.irc.net.event.NumericMessageListener;
 import com.njbailey.irc.net.event.PrivateMessageListener;
 import io.netty.channel.socket.SocketChannel;
@@ -17,24 +20,32 @@ import java.util.List;
 /**
  * Represents a Network that's connected to by the Internet Relay Chat.
  */
-public class Network {
+public class Network implements MessageTarget {
     private SocketChannel channel;
     private final String host;
     private final int port;
     private User client;
 
+    private String name;
     private List<Channel> channels = new ArrayList<Channel>();
     private List<User> users = new ArrayList<User>();
 
+    private List<MessageListener> messageListeners = new ArrayList<>();
     private List<ConnectionListener> connectionListeners = new ArrayList<>();
     private List<NumericMessageListener> numericMessageListeners = new ArrayList<>();
     private List<PrivateMessageListener> privateMessageListeners = new ArrayList<>();
+    private List<ChannelConnectionListener> channelConnectionListeners  = new ArrayList<>();
 
     public Network(final String host, final int port) {
         this.host = host;
         this.port = port;
 
         addNumericMessageListener(new DefaultNumericHandler(this));
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 
     public void setChannel(final SocketChannel channel) {
@@ -52,6 +63,14 @@ public class Network {
         this.connectionListeners.add(connectionListener);
     }
 
+    public void addMessageListener(MessageListener messageListener) {
+        this.messageListeners.add(messageListener);
+    }
+
+    public void removeMessageListener(MessageListener messageListener) {
+        this.messageListeners.remove(messageListener);
+    }
+
     /**
      * Adds a {@code NumericMessageListener} for this {@code Network}.
      */
@@ -64,6 +83,14 @@ public class Network {
      */
     public void addPrivateMessageListener(PrivateMessageListener messageListener) {
         this.privateMessageListeners.add(messageListener);
+    }
+
+    public void addChannelConnectionListener(ChannelConnectionListener connectionListener) {
+        this.channelConnectionListeners.add(connectionListener);
+    }
+
+    public void removeChannelConnectionListener(ChannelConnectionListener connectionListener) {
+        this.channelConnectionListeners.remove(connectionListener);
     }
 
     /**
@@ -100,8 +127,16 @@ public class Network {
      * Called when a {@code Message} is received from the server.
      */
     public void messageReceived(Message message) {
+        messageListeners.forEach(listener -> listener.messageReceived(message));
+
         if(message instanceof NumericMessage) {
-            numericMessageListeners.forEach(listener -> listener.onNumericMessage((NumericMessage) message));
+            NumericMessage numericMessage = (NumericMessage) message;
+
+            if(numericMessage.getNumeric() == 4) {
+                name = message.getArguments().get(0);
+            }
+
+            numericMessageListeners.forEach(listener -> listener.onNumericMessage(numericMessage));
         } else if (message instanceof PrivateMessage) {
             PrivateMessage msg = (PrivateMessage) message;
             final PrivateMessage privateMessage;
@@ -115,6 +150,10 @@ public class Network {
 
             privateMessageListeners.forEach(listener -> listener.onPrivateMessage(privateMessage));
         } else {
+            if(message.getCommand().equals("PING")) {
+                send(new Message(null, "PONG", message.getArguments().toArray(new String[0])));
+            }
+
             System.out.println("Message {");
             System.out.println("\tPrefix: " + message.getPrefix());
             System.out.println("\tCommand: " + message.getCommand());
@@ -181,8 +220,10 @@ public class Network {
         }
 
         if(channel == null) {
-            channel = new Channel(name);
-            channels.add(channel);
+            Channel newChan = new Channel(name);
+            channels.add(newChan);
+            this.channelConnectionListeners.forEach(listener -> listener.joined(newChan));
+            channel = newChan;
         }
 
         return channel;
@@ -202,5 +243,9 @@ public class Network {
         }
 
         return null;
+    }
+
+    public void close() {
+        channel.close();
     }
 }

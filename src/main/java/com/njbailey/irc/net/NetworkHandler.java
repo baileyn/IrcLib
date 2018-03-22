@@ -1,6 +1,7 @@
 package com.njbailey.irc.net;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.njbailey.irc.net.codec.MessageEncoder;
@@ -50,5 +51,14 @@ public class NetworkHandler {
 
         networkList.add(network);
         return network;
+    }
+
+    public List<Network> getNetworkList() {
+        return Collections.unmodifiableList(networkList);
+    }
+
+    public void close() {
+        networkList.forEach(Network::close);
+        eventLoopGroup.shutdownGracefully();
     }
 }
