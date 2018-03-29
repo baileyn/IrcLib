@@ -11,19 +11,26 @@ import java.awt.*;
 public class ChannelPanel extends ClientPanel<Channel> implements UserListener {
     private ChatArea chatArea = new ChatArea();
     private UserList userList = new UserList();
+    private JSplitPane splitPane = new JSplitPane();
 
     public ChannelPanel(Channel channel) {
         super(new BorderLayout(), channel);
 
         channel.addUserListener(this);
 
-        super.add(new JScrollPane(chatArea), BorderLayout.CENTER);
-        super.add(new JScrollPane(userList), BorderLayout.EAST);
+        splitPane.setResizeWeight(1);
+        splitPane.setLeftComponent(new JScrollPane(chatArea));
+        splitPane.setRightComponent(new JScrollPane(userList));
+
+        add(splitPane, BorderLayout.CENTER);
     }
 
     @Override
     public void userAdded(Channel channel, User user) {
         userList.add(user);
+
+        revalidate();
+        repaint();
     }
 
     @Override
