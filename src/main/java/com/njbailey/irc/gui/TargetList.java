@@ -17,8 +17,9 @@ public class TargetList extends JList<String> {
         super.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount() == 2) {
-                    mainFrame.setCurrentPanel(i -> i.getTarget().getName().equalsIgnoreCase(TargetList.super.getSelectedValue()));
+                if (e.getClickCount() == 2) {
+                    mainFrame.setCurrentPanel(
+                            i -> i.getTarget().getName().equalsIgnoreCase(TargetList.super.getSelectedValue()));
                 }
             }
         });

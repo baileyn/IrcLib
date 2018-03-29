@@ -22,7 +22,7 @@ public class ChatArea extends JTextPane implements DocumentListener {
      * @param data the data to write
      */
     public void writeLine(String data) {
-        if(!data.endsWith("\n")) {
+        if (!data.endsWith("\n")) {
             data = data + "\n";
         }
 

@@ -1,24 +1,13 @@
 package com.njbailey;
 
-import java.util.Arrays;
-
-import com.njbailey.irc.core.Channel;
-import com.njbailey.irc.core.Message;
-import com.njbailey.irc.core.messages.NumericMessage;
-import com.njbailey.irc.core.messages.PrivateMessage;
 import com.njbailey.irc.gui.MainFrame;
-import com.njbailey.irc.net.Network;
-import com.njbailey.irc.net.NetworkHandler;
-import com.njbailey.irc.net.event.ConnectionListener;
-import com.njbailey.irc.net.event.NumericMessageListener;
-import com.njbailey.irc.net.event.PrivateMessageListener;
 
 public class Main {
     public static void main(String[] args) {
         MainFrame mainFrame = new MainFrame();
         mainFrame.setVisible(true);
     }
-   /* public static void main(String[] args) {
+    /* public static void main(String[] args) {
         NetworkHandler handler = new NetworkHandler();
         Network network = handler.addNetwork("irc.mozilla.org", 6667);
         network.addConnectionListener(new ConnectionListener(){
@@ -47,10 +36,10 @@ public class Main {
                 String sender = message.getSender();
                 String target = message.getTarget();
                 String msg = message.getMessage();
-
+    
                 Channel channel = network.getChannel(target);
                 System.out.println("[" + target + "][" + sender + "]: " + msg);
-
+    
                 if(msg.equals("!quit")) {
                     System.exit(0); // TODO: Exit gracefully.
                 } else if(msg.equals("!talk")) {

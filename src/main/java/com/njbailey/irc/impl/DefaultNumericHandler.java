@@ -22,10 +22,10 @@ public class DefaultNumericHandler implements NumericMessageListener {
 
 		switch (message.getNumeric()) {
 		case 1:
-			if(arguments.size() >= 1) {
+			if (arguments.size() >= 1) {
 				network.createClient(arguments.get(0));
 			}
-			
+
 			break;
 		case 332:
 			if (arguments.size() == 3) {
