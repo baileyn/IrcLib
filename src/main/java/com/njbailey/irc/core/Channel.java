@@ -26,10 +26,18 @@ public class Channel implements MessageTarget {
         this.topic = "";
     }
 
+    /**
+     * Sets the network of user connected to the channel.
+     * @param Network network of user connected to the channel.
+     */
     public void setNetwork(Network network) {
         this.network = network;
     }
 
+    /**
+     * Return the network connected to the channel.
+     * @return the network connected to the channel.
+     */
     public Network getNetwork() {
         return network;
     }

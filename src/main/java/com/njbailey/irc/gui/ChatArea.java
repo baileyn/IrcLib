@@ -4,7 +4,17 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
+
+import com.njbailey.irc.core.Message;
+import com.njbailey.irc.core.messages.PrivateMessage;
+
 import java.awt.*;
+import java.util.Date;
+import java.time.LocalTime;
+import java.util.Date;
+import java.time.format.DateTimeFormatter;
+
+
 
 public class ChatArea extends JTextPane implements DocumentListener {
     public ChatArea() {
@@ -12,6 +22,14 @@ public class ChatArea extends JTextPane implements DocumentListener {
         super.setEditable(false);
         super.addMouseListener(new CursorUpdater(this, Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR)));
         super.getStyledDocument().addDocumentListener(this);
+    }
+
+    public void write(PrivateMessage message) {
+        String channel = message.getTarget();
+        String sender = message.getSender();
+        String msg = message.getMessage();
+        
+       // writeLine(somePrettyFormattingOfThePrivateMessage);
     }
 
     /**
@@ -26,7 +44,18 @@ public class ChatArea extends JTextPane implements DocumentListener {
             data = data + "\n";
         }
 
-        writeText(data);
+        writeText(timeStamp() + data);
+    }
+    /**
+     * Retrieves the current LocalTime. Formats to HH:mm:ss.
+     * Returns string for timeStamp to be printed with messages.
+     */
+    public String timeStamp() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
+        LocalTime currentTime = LocalTime.now();
+        String formattedTime = formatter.format(currentTime);
+
+        return " [" + formattedTime +  "]";
     }
 
     public void writeText(String data) {
