@@ -107,7 +107,7 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener 
 
         JPanel panel = new JPanel(new BorderLayout());
 
-        //panel.add(targetList, BorderLayout.WEST);
+        panel.add(targetList, BorderLayout.WEST);
         mainSplitPane.setLeftComponent(targetList);
         panel.add(mainSplitPane);
         panel.add(inputArea, BorderLayout.SOUTH);
