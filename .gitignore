@@ -109,3 +109,4 @@ bin/
 
 build/
 .gradle/
+/.settings
