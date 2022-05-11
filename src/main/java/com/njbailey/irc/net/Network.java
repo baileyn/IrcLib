@@ -133,6 +133,10 @@ public class Network {
     public User addOrGetUser(final String nickname) {
         User user = null;
 
+        if(getClient().getNickname().equalsIgnoreCase(nickname)) {
+            return getClient();
+        }
+
         for(User u : users) {
             if(u.getNickname().equalsIgnoreCase(nickname)) {
                 user = u;
