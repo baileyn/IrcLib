@@ -19,7 +19,7 @@ public class PrivateMessage extends Message {
         this(target.getName(), message);
         this.sender = sender.getName();
     }
-    
+
     /**
      * Create a new PrivateMessage to send the specified message to the specified target.
      * 
@@ -83,11 +83,11 @@ public class PrivateMessage extends Message {
      * @return the sender for this private message
      */
     public String getSender() {
-        if(getPrefix() == null) {
+        if (getPrefix() == null) {
             return null;
         }
 
-        if(sender != null) {
+        if (sender != null) {
             return sender;
         }
 

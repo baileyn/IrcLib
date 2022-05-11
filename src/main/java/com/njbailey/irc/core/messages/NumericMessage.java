@@ -17,7 +17,7 @@ public class NumericMessage extends Message {
         this.numeric = numeric;
 
         // Numeric _MUST_ be 3 digits. If it's more, throw an exception.
-        if(numeric > 999) {
+        if (numeric > 999) {
             throw new IllegalArgumentException("numeric must be in the range (0,999]");
         }
     }

@@ -67,15 +67,15 @@ public class Message {
     public String toRaw() {
         StringBuilder messageBuilder = new StringBuilder();
 
-        if(prefix != null) {
+        if (prefix != null) {
             messageBuilder.append(prefix).append(" ");
         }
 
         messageBuilder.append(command);
 
-        for(String argument : arguments) {
+        for (String argument : arguments) {
             messageBuilder.append(" ");
-            if(argument.chars().anyMatch(Character::isWhitespace)) {
+            if (argument.chars().anyMatch(Character::isWhitespace)) {
                 messageBuilder.append(":").append(argument);
                 break;
             } else {
@@ -98,7 +98,7 @@ public class Message {
         int index = 0;
 
         // TODO: Make a constant for the prefix designator.
-        if(raw.startsWith(":")) {
+        if (raw.startsWith(":")) {
             prefix = components[index++];
         }
 
@@ -106,32 +106,32 @@ public class Message {
 
         String[] rawArguments = components[index].split(" ");
 
-        for(int i = 0; i < rawArguments.length; i++) {
+        for (int i = 0; i < rawArguments.length; i++) {
             String argument = rawArguments[i];
             // TODO: Also make a constant for this, which means the rest of line is just part of this single argument.
             // If the argument starts with this designator, it means the rest of the line is
             // part of this one single argument.
-            if(argument.startsWith(":")) {
+            if (argument.startsWith(":")) {
                 StringBuilder argumentBuilder = new StringBuilder(argument.substring(1));
                 i++;
 
                 // Continue through the rest of the line appending it to the argument.
                 // Since `i` is used here to continue looping, it will be incremented for
                 // the parent loop as well, causing it to exit afterwards.
-                for(; i < rawArguments.length; i++) {
+                for (; i < rawArguments.length; i++) {
                     argumentBuilder.append(" ").append(rawArguments[i]);
                 }
 
                 argument = argumentBuilder.toString();
             }
-            
+
             arguments.add(argument);
         }
 
         String[] args = arguments.toArray(new String[0]);
 
         // Construct the Message we have read.
-        if(command.chars().allMatch(Character::isDigit)) {
+        if (command.chars().allMatch(Character::isDigit)) {
             // The command is a sequence of numbers, return a NumericMessage.
             return new NumericMessage(prefix, Integer.parseInt(command), args);
         } else if (command.equals("PRIVMSG") && args.length == 2) {

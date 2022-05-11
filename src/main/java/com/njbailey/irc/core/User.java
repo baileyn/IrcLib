@@ -7,7 +7,7 @@ public class User implements MessageTarget {
     private String nickname;
     private String username;
     private String hostname;
-    
+
     /**
      * Create a new User with the specified nickname.
      * 
@@ -40,7 +40,7 @@ public class User implements MessageTarget {
     public static User fromPrefix(String prefix) {
         String[] components = prefix.substring(1).split("[!@]");
 
-        if(components.length != 3) {
+        if (components.length != 3) {
             return null;
         }
 

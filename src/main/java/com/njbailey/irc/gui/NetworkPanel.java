@@ -34,10 +34,10 @@ public class NetworkPanel extends ClientPanel<Network> implements ChannelConnect
 
     public void writeMessage(PrivateMessage message) {
         ClientPanel<?> panel = mainFrame.getPanel(p -> {
-            if(p.getTarget() instanceof MessageTarget) {
+            if (p.getTarget() instanceof MessageTarget) {
                 MessageTarget target = (MessageTarget) p.getTarget();
 
-                if(target.getName().equalsIgnoreCase(message.getTarget())) {
+                if (target.getName().equalsIgnoreCase(message.getTarget())) {
                     return true;
                 }
             }
@@ -45,10 +45,10 @@ public class NetworkPanel extends ClientPanel<Network> implements ChannelConnect
             return false;
         });
 
-        if(panel != null) {
-            if(panel instanceof NetworkPanel) {
+        if (panel != null) {
+            if (panel instanceof NetworkPanel) {
                 write(message);
-            } else if(panel instanceof ChannelPanel) {
+            } else if (panel instanceof ChannelPanel) {
                 ((ChannelPanel) panel).write(message);
             }
         }
