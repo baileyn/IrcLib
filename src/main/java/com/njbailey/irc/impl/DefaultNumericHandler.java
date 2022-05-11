@@ -1,5 +1,6 @@
 package com.njbailey.irc.impl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import com.njbailey.irc.core.Channel;
@@ -16,15 +17,30 @@ public class DefaultNumericHandler implements NumericMessageListener {
 
 	@Override
 	public void onNumericMessage(NumericMessage message) {
+		List<String> arguments = message.getArguments();
+
 		switch(message.getNumeric()) {
 			case 332:
-				List<String> arguments = message.getArguments();
-
-				if(arguments.size() == 2) {
-					updateTopic(arguments.get(0), arguments.get(1));
+				if(arguments.size() == 3) {
+					updateTopic(arguments.get(1), arguments.get(2));
 				}
-
 				break;
+			case 353:
+				if(arguments.size() == 4) {
+					String names = arguments.get(arguments.size() - 1);
+
+					Channel channel = network.addOrGetChannel(arguments.get(2));
+					for(String name : names.split(" ")) {
+						name = name.replaceAll("[@+]", "");
+						channel.addUser(network.addOrGetUser(name));
+					}
+				} else {
+					System.out.println("Expected NAMES to have 4 arguments, but didn't.");
+					System.out.println(message.getCommand() + ": " + Arrays.toString(arguments.toArray()));
+				}
+				break;
+			default:
+				System.out.println("Unhandled Numeric: " + message.getNumeric() + ": " + Arrays.toString(arguments.toArray()));
 		}
 	}
 
