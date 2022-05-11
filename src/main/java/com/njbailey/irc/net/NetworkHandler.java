@@ -29,7 +29,12 @@ public class NetworkHandler {
      */
     private List<Network> networkList = new ArrayList<>();
 
-    public ChannelFuture addNetwork(String networkHost, int port) {
+    /**
+     * Add the specified Network to the handler.
+     * 
+     * @return the Network that was created.
+     */
+    public Network addNetwork(String networkHost, int port) {
         Bootstrap bootstrap = new Bootstrap();
         Network network = new Network(networkHost, port);
 
@@ -42,8 +47,9 @@ public class NetworkHandler {
                         ch.pipeline().addLast(new StringDecoder());
                         ch.pipeline().addLast(new IrcClientHandler(network));
                     }
-                });
+                }).connect(networkHost, port);
+
         networkList.add(network);
-        return network.connect(bootstrap);
+        return network;
     }
 }
