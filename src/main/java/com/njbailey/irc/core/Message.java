@@ -128,4 +128,34 @@ public class Message {
         // Construct the Message we have read.
         return new Message(prefix, command, arguments.toArray(new String[0]));
     }
+
+    /**
+     * Create a NICK message to send to a server.
+     * 
+     * NICK message is used to give user a nickname or change the previous
+     * one.
+     * 
+     * @param nick the client's nickname
+     * @return the Nick message
+     */
+    public static Message createNickMessage(final String nick) {
+        return new Message(null, "NICK", nick);
+    }
+
+    /**
+     * Create a registration USER message to send to a server.
+     * 
+     * The USER message is used at the beginning of connection to specify
+     * the username, hostname, servername and realname of s new user.  It is
+     * also used in communication between servers to indicate new user
+     * arriving on IRC, since only after both USER and NICK have been
+     * received from a client does a user become registered.
+     * 
+     * @param username the user's user name
+     * @param realname the user's real name
+     * @return the User message
+     */
+    public static Message createUserMessage(final String username, final String realname) {
+        return new Message(null, "USER", username, "0", "*", realname);
+    }
 }

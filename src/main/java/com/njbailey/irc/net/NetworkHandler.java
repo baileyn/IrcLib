@@ -1,21 +1,20 @@
 package com.njbailey.irc.net;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import com.njbailey.irc.net.codec.MessageEncoder;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.DelimiterBasedFrameDecoder;
-import io.netty.handler.codec.Delimiters;
+import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 
 /**
  * Handles all of the networks that we're currently connected to.
@@ -42,10 +41,10 @@ public class NetworkHandler {
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
-                        ch.pipeline().addLast(
-                                new DelimiterBasedFrameDecoder(MAX_MESSAGE_LENGTH, Delimiters.lineDelimiter()));
+                        ch.pipeline().addLast(new LineBasedFrameDecoder(MAX_MESSAGE_LENGTH));
                         ch.pipeline().addLast(new StringDecoder());
                         ch.pipeline().addLast(new IrcClientHandler(network));
+                        ch.pipeline().addLast(new MessageEncoder());
                     }
                 }).connect(networkHost, port);
 
