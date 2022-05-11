@@ -19,11 +19,12 @@ import java.util.List;
 public class MainFrame extends JFrame implements ActionListener, WindowListener {
     private NetworkHandler networkHandler = new NetworkHandler();
 
-
     private List<ClientPanel<? extends MessageTarget>> panelList = new ArrayList<>();
     private ClientPanel<? extends MessageTarget> currentPanel;
     private InputArea inputArea = new InputArea();
     private TargetList targetList = new TargetList(this);
+
+    private JSplitPane mainSplitPane = new JSplitPane();
 
     public MainFrame() {
         setupDefaultLookAndFeel();
@@ -56,7 +57,7 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener 
         });
 
         network.addNumericMessageListener(message -> {
-            if(message.getNumeric() == 4) {
+            if (message.getNumeric() == 4) {
                 addPanel(new NetworkPanel(MainFrame.this, network));
             }
         });
@@ -70,12 +71,12 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener 
     }
 
     public void setCurrentPanel(ClientPanel<? extends MessageTarget> panel) {
-        if(currentPanel != null) {
-            remove(currentPanel);
+        if (currentPanel != null) {
+            mainSplitPane.remove(currentPanel);
         }
 
         currentPanel = panel;
-        add(panel, BorderLayout.CENTER);
+        mainSplitPane.setRightComponent(panel);
         revalidate();
         repaint();
     }
@@ -83,14 +84,14 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener 
     public void setCurrentPanel(Validator validator) {
         ClientPanel<? extends MessageTarget> panel = getPanel(validator);
 
-        if(panel != null) {
+        if (panel != null) {
             setCurrentPanel(panel);
         }
     }
 
     public ClientPanel<? extends MessageTarget> getPanel(Validator validator) {
-        for(ClientPanel<? extends MessageTarget> panel : panelList) {
-            if(validator.isValid(panel)) {
+        for (ClientPanel<? extends MessageTarget> panel : panelList) {
+            if (validator.isValid(panel)) {
                 return panel;
             }
         }
@@ -105,7 +106,10 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener 
         inputArea.addActionListener(this);
 
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(targetList, BorderLayout.WEST);
+
+        //panel.add(targetList, BorderLayout.WEST);
+        mainSplitPane.setLeftComponent(targetList);
+        panel.add(mainSplitPane);
         panel.add(inputArea, BorderLayout.SOUTH);
 
         super.setContentPane(panel);
@@ -117,11 +121,10 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener 
         JMenu connectionMenu = new JMenu("Connections");
         JMenuItem addConnection = new JMenuItem("Add Connection");
         addConnection.addActionListener(action -> {
-            addServer("irc.freenode.net", 6667);
+            addServer("irc.mozilla.org", 6667);
         });
 
         connectionMenu.add(addConnection);
-
         menuBar.add(connectionMenu);
 
         return menuBar;
@@ -130,23 +133,24 @@ public class MainFrame extends JFrame implements ActionListener, WindowListener 
     private void setupDefaultLookAndFeel() {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException
+                | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() == inputArea) {
+        if (e.getSource() == inputArea) {
             Network network = null;
 
-            if(currentPanel.getTarget() instanceof Network) {
+            if (currentPanel.getTarget() instanceof Network) {
                 network = (Network) currentPanel.getTarget();
-            } else if(currentPanel.getTarget() instanceof Channel) {
+            } else if (currentPanel.getTarget() instanceof Channel) {
                 network = ((Channel) currentPanel.getTarget()).getNetwork();
             }
 
-            if(network != null) {
+            if (network != null) {
                 network.send(Message.fromRaw(inputArea.getText()));
                 inputArea.setText("");
             }
