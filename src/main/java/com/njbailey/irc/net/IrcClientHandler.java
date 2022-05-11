@@ -10,8 +10,8 @@ public class IrcClientHandler extends SimpleChannelInboundHandler<String> {
         this.network = network;
     }
 
-	@Override
-	protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
-		System.out.println("Received: " + msg);
-	}
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+        System.out.println("Received: " + msg);
+    }
 }

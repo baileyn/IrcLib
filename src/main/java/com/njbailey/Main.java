@@ -1,8 +1,5 @@
 package com.njbailey;
 
-import java.io.IOException;
-import java.util.Scanner;
-
 import com.njbailey.irc.net.NetworkHandler;
 
 public class Main {
