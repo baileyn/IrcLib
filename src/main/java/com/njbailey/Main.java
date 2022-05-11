@@ -2,10 +2,12 @@ package com.njbailey;
 
 import com.njbailey.irc.core.Message;
 import com.njbailey.irc.core.messages.NumericMessage;
+import com.njbailey.irc.core.messages.PrivateMessage;
 import com.njbailey.irc.net.Network;
 import com.njbailey.irc.net.NetworkHandler;
 import com.njbailey.irc.net.event.ConnectionListener;
 import com.njbailey.irc.net.event.NumericMessageListener;
+import com.njbailey.irc.net.event.PrivateMessageListener;
 
 public class Main {
     public static void main(String[] args) {
@@ -29,6 +31,12 @@ public class Main {
                 if(message.getNumeric() == 5) {
                     network.send(new Message(null, "JOIN", "#rust-beginners"));
                 }
+            }
+        });
+        network.addPrivateMessageListener(new PrivateMessageListener(){
+            @Override
+            public void onPrivateMessage(PrivateMessage message) {
+                String sender = message.getSender();
             }
         });
     }

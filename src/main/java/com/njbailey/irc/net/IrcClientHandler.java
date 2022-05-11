@@ -1,6 +1,7 @@
 package com.njbailey.irc.net;
 
 import com.njbailey.irc.core.Message;
+import com.njbailey.irc.core.messages.PrivateMessage;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -30,6 +31,7 @@ public class IrcClientHandler extends SimpleChannelInboundHandler<String> {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
         Message message = Message.fromRaw(msg);
+
         network.messageReceived(message);
     }
 }
