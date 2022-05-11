@@ -21,6 +21,12 @@ public class DefaultNumericHandler implements NumericMessageListener {
 		List<String> arguments = message.getArguments();
 
 		switch (message.getNumeric()) {
+		case 1:
+			if(arguments.size() >= 1) {
+				network.createClient(arguments.get(0));
+			}
+			
+			break;
 		case 332:
 			if (arguments.size() == 3) {
 				updateTopic(arguments.get(1), arguments.get(2));
