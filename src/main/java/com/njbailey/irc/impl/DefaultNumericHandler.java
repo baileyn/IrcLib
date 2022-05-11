@@ -34,9 +34,11 @@ public class DefaultNumericHandler implements NumericMessageListener {
 			break;
 		case 353:
 			if (arguments.size() == 4) {
+				System.out.println("updating channel: " + arguments.get(2));
 				Channel channel = network.addOrGetChannel(arguments.get(2));
 				List<String> names = Arrays.stream(arguments.get(3).split(" ")).collect(Collectors.toList());
 
+				System.out.println("Adding names: " + Arrays.toString(names.toArray()));
 				updateNames(channel, names);
 			} else {
 				System.out.println("Expected NAMES to have 4 arguments, but didn't.");

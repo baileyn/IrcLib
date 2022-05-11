@@ -106,6 +106,7 @@ public class Network {
             PrivateMessage msg = (PrivateMessage) message;
             final PrivateMessage privateMessage;
 
+            // Update the target if it's a private message.
             if(msg.getTarget().equalsIgnoreCase(client.getNickname())) {
                 privateMessage = new PrivateMessage(msg.getPrefix(), msg.getSender(), msg.getMessage());
             } else {
@@ -155,6 +156,7 @@ public class Network {
 
         if(user == null) {
             user = new User(nickname);
+            users.add(user);
         }
 
         return user;
@@ -180,8 +182,25 @@ public class Network {
 
         if(channel == null) {
             channel = new Channel(name);
+            channels.add(channel);
         }
 
         return channel;
+    }
+
+    /**
+     * Return the channel with the specified name.
+     * 
+     * @param name the name of the channel
+     * @return the channel with the specified name
+     */
+    public Channel getChannel(final String name) {
+        for(Channel c : channels) {
+            if(c.getName().equalsIgnoreCase(name)) {
+                return c;
+            }
+        }
+
+        return null;
     }
 }

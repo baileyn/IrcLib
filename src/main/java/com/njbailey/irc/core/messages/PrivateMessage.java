@@ -29,6 +29,7 @@ public class PrivateMessage extends Message {
      */
     public PrivateMessage(String prefix, MessageTarget target, String message) {
         super(prefix, target.getName(), message);
+        this.target = target.getName();
     }
 
     /**
@@ -40,6 +41,8 @@ public class PrivateMessage extends Message {
      */
     public PrivateMessage(String prefix, String target, String message) {
         super(prefix, "PRIVMSG", target, message);
+        this.target = target;
+        this.message = message;
     }
 
     /**
@@ -50,6 +53,7 @@ public class PrivateMessage extends Message {
      */
     public PrivateMessage(String target, String message) {
         super(null, "PRIVMSG", target, message);
+        this.target = target;
     }
 
     /**

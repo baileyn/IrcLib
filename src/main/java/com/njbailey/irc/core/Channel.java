@@ -1,6 +1,7 @@
 package com.njbailey.irc.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -52,5 +53,13 @@ public class Channel implements MessageTarget {
      */
     public void addUser(User user) {
         this.connectedUsers.add(user);
+    }
+
+    /**
+     * Return a list of users connected to the channel.
+     * @return a list of users connected to the channel
+     */
+    public List<User> getUsers() {
+        return Collections.unmodifiableList(connectedUsers);
     }
 }

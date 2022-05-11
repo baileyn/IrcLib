@@ -135,7 +135,7 @@ public class Message {
             // The command is a sequence of numbers, return a NumericMessage.
             return new NumericMessage(prefix, Integer.parseInt(command), args);
         } else if (command.equals("PRIVMSG") && args.length == 2) {
-            return new PrivateMessage(args[0], args[1]);
+            return new PrivateMessage(prefix, args[0], args[1]);
         } else {
             // Unspecialized message.
             return new Message(prefix, command, args);
